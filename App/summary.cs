@@ -17,14 +17,14 @@ public class SummaryPage
         for (DateOnly date = from; date <= to; date = date.AddMonths(1))
         {
             sb.AppendFormat("""
-                <th>{0:yyyy}<br>{0:MMMM}</th>
+                <th><span class="year">{0:yyyy}<span><br><span class="month">{0:MMMM}</span></th>
             """, date);
         }
 
         return $"""
         <tr>
         <th></th>
-        {sb}
+        <span>{sb}</span>
         </tr>
         """;
     }
@@ -44,6 +44,7 @@ public class SummaryPage
             {Style.Render(labels)}
         </head>
         <body>
+            {MenuBar.Render(Data.Keys)}
             <h1>Summary per label</h1>
             <p>Data from {minDate:yyyy-MM} to {maxDate:yyyy-MM}</p>
             <h1>Spending</h1>
@@ -76,8 +77,6 @@ public class SummaryPage
         var sb = new StringBuilder();
         foreach (var label in labels.OrderBy(kv => kv.Key))
         {
-            //Console.WriteLine(Data.SelectMany(s => s.Value).Where(t => t.Value.Label == label.Key).Sum(c => c.Value.Out));
-            //if(Data.SelectMany(s => s.Value).Where(t => t.Value.Label == label.Key).Sum(c => c.Value.Out) == 0M) continue;
             sb.Append(RenderLabelColumn(label.Key, from, to, showIncome));
             foreach (var ss in label.OrderBy(l => l.SubLabel))
             {

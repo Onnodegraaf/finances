@@ -97,6 +97,7 @@ app.MapPost("/import", async (IFormFile file) =>
     return Results.Redirect($"/{date.Year}/{date.Month}/transactions.html") ;
 }).DisableAntiforgery();
 
+app.MapGet("/transactions.html", () => transactionsPage.Render());
 app.MapGet("/{year}/{month}/transactions.html", (int year, int month) => transactionsPage.Render(year, month));
 app.MapGet("/summary.html", ([FromQuery]string?from, [FromQuery]string? to) => summaryPage.Render(from, to));
 app.Run();

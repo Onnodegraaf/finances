@@ -53,6 +53,24 @@ public sealed class Transactions
     }
 
 
+    public IResult Render()
+    {
+        var labels = Data.Values.SelectMany(x => x.Values).Select(t => new Label(t.Label, t.SubLabel)).GroupBy(l => l.Name);
+        var htmlContent = $"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <title>Finances</title>
+            {Style.Render(labels)}
+        </head>
+        <body>
+        {MenuBar.Render(Data.Keys)}
+        </body>
+        </html>
+        """;
+        return Results.Content(htmlContent, "text/html");
+    }
 
     public IResult Render(int year, int month)
     {
@@ -182,6 +200,7 @@ public sealed class Transactions
         {Style.Render(labels)}
     </head>
     <body>
+        {MenuBar.Render(Data.Keys, year, month)}
         <h1>Transactions for {currentMonth:MMMM yyyy}</h1>
         {LabelSelector(labels)}
         <input type="checkbox" id="toggle-Bills" class="toggle-Bills">
